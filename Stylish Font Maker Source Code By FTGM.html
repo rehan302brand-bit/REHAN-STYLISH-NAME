@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTGM Stylish Font Maker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00ffff;
+            --neon-pink: #ff00ff;
+            --dark-bg: #1a0a20; /* Dark purple-ish for cyberpunk feel */
+            --container-bg: #2b1136;
+            --input-bg: #3c1a4e;
+            --text-color: #e0e0e0;
+            --button-gradient-start: #00ffff;
+            --button-gradient-end: #ff00ff;
+            --copy-button-bg: #ff6600; /* Original orange for contrast */
+            --toast-success: #00ff7f; /* Bright green for success toast */
+            --toast-error: #ff3333; /* Red for error toast */
+            --border-glow-intensity: 0.7;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1a0a20, #0a0a20, #200a1a); /* Cyberpunk gradient */
+            color: var(--text-color);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 25px; /* More rounded */
+            box-shadow: 0 0 20px rgba(var(--neon-blue), var(--border-glow-intensity)), 0 0 40px rgba(var(--neon-pink), var(--border-glow-intensity)); /* Neon glow */
+            width: 95%;
+            max-width: 700px;
+            text-align: center;
+            border: 2px solid var(--neon-blue); /* Neon border */
+            transition: all 0.4s ease-in-out;
+            position: relative; /* For pseudo-elements */
+            overflow: hidden; /* Ensures glow doesn't spill out */
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, var(--neon-blue) 0%, transparent 25%, transparent 75%, var(--neon-pink) 100%);
+            animation: rotateGlow 15s linear infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container:hover {
+            box-shadow: 0 0 30px rgba(var(--neon-blue), 0.9), 0 0 60px rgba(var(--neon-pink), 0.9);
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-family: 'Archivo Black', sans-serif; /* Archivo Black for title */
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-pink), 0 0 25px rgba(var(--neon-blue), 0.7);
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        textarea {
+            width: calc(100% - 30px); /* Adjusted padding */
+            padding: 18px;
+            margin-bottom: 25px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 18px; /* More rounded */
+            font-size: 1.15em;
+            resize: vertical;
+            min-height: 140px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            box-shadow: 0 0 8px rgba(var(--neon-blue), 0.4);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 12px rgba(var(--neon-pink), 0.6);
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .select-wrapper {
+            position: relative;
+            width: calc(100% - 30px);
+            max-width: 350px;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            padding: 15px 25px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 18px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1.1em;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 0 8px rgba(var(--neon-blue), 0.4);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        select:hover, select:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 12px rgba(var(--neon-pink), 0.6);
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            color: var(--neon-blue);
+            pointer-events: none;
+            font-size: 0.9em;
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end));
+            color: var(--dark-bg); /* Dark text for contrast on bright buttons */
+            padding: 15px 30px;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.15em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 12px rgba(var(--neon-blue), 0.8), 0 0 18px rgba(var(--neon-pink), 0.6);
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 15px rgba(var(--neon-blue), 1), 0 0 25px rgba(var(--neon-pink), 0.8);
+            background: linear-gradient(45deg, var(--button-gradient-end), var(--button-gradient-start)); /* Reverse gradient on hover */
+        }
+
+        .output-section {
+            width: 100%;
+            margin-top: 25px;
+        }
+
+        .output-box {
+            background-color: var(--input-bg);
+            padding: 20px;
+            border-radius: 18px;
+            min-height: 80px;
+            text-align: left;
+            font-size: 1.4em;
+            word-wrap: break-word;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 8px rgba(var(--neon-blue), 0.4);
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            background-color: var(--copy-button-bg); /* Distinct color for copy */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(var(--copy-button-bg), 0.7);
+        }
+
+        .copy-button:hover {
+            transform: translateY(-2px);
+            background-color: #ff8822; /* Slightly brighter orange */
+            box-shadow: 0 0 15px rgba(var(--copy-button-bg), 1);
+        }
+
+        .channel-button {
+            display: inline-block;
+            background-color: #25d366; /* WhatsApp green */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 18px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(37, 211, 102, 0.7);
+        }
+        .channel-button:hover {
+            transform: translateY(-3px);
+            background-color: #1da851;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 1);
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #bbb;
+            text-align: center;
+            text-shadow: 0 0 5px rgba(var(--neon-blue), 0.3);
+        }
+        .footer a {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: var(--neon-pink);
+            text-decoration: underline;
+        }
+
+        /* Message box for copy confirmation */
+        .message-box {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            z-index: 1000;
+            display: none;
+            animation: fadeInOut 3s forwards; /* Increased duration for better visibility */
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        .message-box.success {
+            background-color: var(--toast-success);
+            box-shadow: 0 0 15px rgba(var(--toast-success), 0.6);
+        }
+
+        .message-box.error {
+            background-color: var(--toast-error);
+            box-shadow: 0 0 15px rgba(var(--toast-error), 0.6);
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2em;
+            }
+            .container {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            textarea, select, button, .copy-button, .channel-button {
+                font-size: 1em;
+                padding: 12px;
+                border-radius: 12px;
+            }
+            .output-box {
+                font-size: 1.2em;
+                padding: 15px;
+                min-height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stylish Font Maker</h1>
+
+        <div class="controls">
+            <textarea id="inputText" placeholder="Type simple text here..."></textarea>
+
+            <div class="select-wrapper">
+                <select id="fontStyleSelector">
+                    <option value="stylish">Stylish Font (Serif Bold)</option>
+                    <option value="stylish2">Stylish 2 (Italic Bold Serif)</option>
+                    <option value="bold">Bold Font (Sans-serif Bold)</option>
+                    <option value="monospace">Mono Space</option>
+                    <option value="tiny">Tiny Font (Small Caps)</option>
+                    <option value="very_small">Very Small (Superscript)</option>
+                    <option value="blocks">Blocks Style</option>
+                </select>
+            </div>
+
+            <button onclick="generateStylishFont()">Generate Stylish Font</button>
+        </div>
+
+        <div class="output-section">
+            <div class="output-box" id="output"></div>
+            <button class="copy-button" onclick="copyToClipboard()">Copy Output</button>
+        </div>
+    </div>
+
+    <a href="https://whatsapp.com/channel/0029VbAVaylCnA7pF6IP0R46" target="_blank" class="channel-button">Join My WhatsApp Channel</a>
+
+    <footer class="footer">
+        <p>© 2025 FTGM Tech - Powered by <a href="https://youtube.com/@ftgmtech" target="_blank">FTGM Tech</a></p>
+    </footer>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        const fontMaps = {
+            'stylish': {
+                'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉', 'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓', 'U': '𝐔', 'V': '𝐕', 'W': '𝐖', 'X': '𝐗', 'Y': '𝐘', 'Z': '𝐙',
+                'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣', 'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭', 'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳',
+                '0': '𝟎', '1': '𝟏', '2': '𝟐', '3': '𝟑', '4': '𝟒', '5': '𝟓', '6': '𝟔', '7': '𝟕', '8': '𝟖', '9': '𝟗'
+            },
+            'stylish2': { // Italic Bold Serif
+                'A': '𝑨', 'B': '𝑩', 'C': '𝑪', 'D': '𝑫', 'E': '𝑬', 'F': '𝑭', 'G': '𝑮', 'H': '𝑯', 'I': '𝑰', 'J': '𝑱', 'K': '𝑲', 'L': '𝑳', 'M': '𝑴', 'N': '𝑵', 'O': '𝑶', 'P': '𝑷', 'Q': '𝑸', 'R': '𝑹', 'S': '𝑺', 'T': '𝑻', 'U': '𝑼', 'V': '𝑽', 'W': '𝑾', 'X': '𝑿', 'Y': '𝒀', 'Z': '𝒁',
+                'a': '𝒂', 'b': '𝒃', 'c': '𝒄', 'd': '𝒅', 'e': '𝒆', 'f': '𝒇', 'g': '𝒈', 'h': '𝒉', 'i': '𝒊', 'j': '𝒋', 'k': '𝒌', 'l': '𝒍', 'm': '𝒎', 'n': '𝒏', 'o': '𝒐', 'p': '𝒑', 'q': '𝒒', 'r': '𝒓', 's': '𝒔', 't': '𝒕', 'u': '𝒖', 'v': '𝒗', 'w': '𝒘', 'x': '𝒙', 'y': '𝒚', 'z': '𝒛',
+                '0': '𝟏', '1': '𝟐', '2': '𝟑', '3': '𝟒', '4': '𝟓', '5': '𝟔', '6': '𝟕', '7': '𝟖', '8': '𝟗', '9': '𝟎' // Note: these are actually Mathematical Bold Digit characters, not Italic Bold Serif digits
+            },
+            'bold': { // Bold Sans-serif
+                'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭',
+                'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇',
+                '0': '𝟬', '1': '𝟭', '2': '𝟮', '3': '𝟯', '4': '𝟰', '5': '𝟱', '6': '𝟲', '7': '𝟳', '8': '𝟴', '9': '𝟵'
+            },
+            'monospace': {
+                'A': 'Ａ', 'B': 'Ｂ', 'C': 'Ｃ', 'D': 'Ｄ', 'E': 'Ｅ', 'F': 'Ｆ', 'G': 'Ｇ', 'H': 'Ｈ', 'I': 'Ｉ', 'J': 'Ｊ', 'K': 'Ｋ', 'L': 'Ｌ', 'M': 'Ｍ', 'N': 'Ｎ', 'O': 'Ｏ', 'P': 'Ｐ', 'Q': 'Ｑ', 'R': 'Ｒ', 'S': 'Ｓ', 'T': 'Ｔ', 'U': 'Ｕ', 'V': 'Ｖ', 'W': 'Ｗ', 'X': 'Ｘ', 'Y': 'Ｙ', 'Z': 'Ｚ',
+                'a': 'ａ', 'b': 'ｂ', 'c': 'ｃ', 'd': 'ｄ', 'e': 'ｅ', 'f': 'ｆ', 'g': 'ｇ', 'h': 'ｈ', 'i': 'ｉ', 'j': 'ｊ', 'k': 'ｋ', 'l': 'ｌ', 'm': 'ｍ', 'n': 'ｎ', 'o': 'ｏ', 'p': 'ｐ', 'q': 'ｑ', 'r': 'ｒ', 's': 'ｓ', 't': 'ｔ', 'u': 'ｕ', 'v': 'ｖ', 'w': 'ｗ', 'x': 'ｘ', 'y': 'ｙ', 'z': 'ｚ',
+                '0': '０', '1': '１', '2': '２', '3': '３', '4': '４', '5': '５', '6': '６', '7': '７', '8': '８', '9': '９'
+            },
+            'tiny': { // Small Caps and Subscripts
+                'A': 'ᴀ', 'B': 'ʙ', 'C': 'ᴄ', 'D': 'ᴅ', 'E': 'ᴇ', 'F': 'ꜰ', 'G': 'ɢ', 'H': 'ʜ', 'I': 'ɪ', 'J': 'ᴊ', 'K': 'ᴋ', 'L': 'ʟ', 'M': 'ᴍ', 'N': 'ɴ', 'O': 'ᴏ', 'P': 'ᴘ', 'Q': 'Q', 'R': 'ʀ', 'S': 'ꜱ', 'T': 'ᴛ', 'U': 'ᴜ', 'V': 'ᴠ', 'W': 'ᴡ', 'X': 'x', 'Y': 'ʏ', 'Z': 'ᴢ',
+                'a': 'ᴀ', 'b': 'ʙ', 'c': 'ᴄ', 'd': 'ᴅ', 'e': 'ᴇ', 'f': 'ꜰ', 'g': 'ɢ', 'h': 'ʜ', 'i': 'ɪ', 'j': 'ᴊ', 'k': 'ᴋ', 'l': 'ʟ', 'm': 'ᴍ', 'n': 'ɴ', 'o': 'ᴏ', 'p': 'ᴘ', 'q': 'Q', 'r': 'ʀ', 's': 'ꜱ', 't': 'ᴛ', 'u': 'ᴜ', 'v': 'ᴠ', 'w': 'ᴡ', 'x': 'x', 'y': 'ʏ', 'z': 'ᴢ',
+                '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉'
+            },
+            'very_small': { // Superscripts
+                'A': 'ᴬ', 'B': 'ᴮ', 'C': 'ᶜ', 'D': 'ᴰ', 'E': 'ᴱ', 'F': 'ᶠ', 'G': 'ᴳ', 'H': 'ᴴ', 'I': 'ᴵ', 'J': 'ᴶ', 'K': 'ᴷ', 'L': 'ᴸ', 'M': 'ᴹ', 'N': 'ᴺ', 'O': 'ᴼ', 'P': 'ᴾ', 'Q': 'Q', 'R': 'ᴿ', 'S': 'ˢ', 'T': 'ᵀ', 'U': 'ᵁ', 'V': 'ⱽ', 'W': 'ᵂ', 'X': 'ˣ', 'Y': 'ʸ', 'Z': 'ᶻ',
+                'a': 'ᵃ', 'b': 'ᵇ', 'c': 'ᶜ', 'd': 'ᵈ', 'e': 'ᵉ', 'f': 'ᶠ', 'g': 'ᵍ', 'h': 'ʰ', 'i': 'ⁱ', 'j': 'ʲ', 'k': 'ᵏ', 'l': 'ˡ', 'm': 'ᵐ', 'n': 'ⁿ', 'o': 'ᵒ', 'p': 'ᵖ', 'q': 'q', 'r': 'ʳ', 's': 'ˢ', 't': 'ᵗ', 'u': 'ᵘ', 'v': 'ᵛ', 'w': 'ʷ', 'x': 'ˣ', 'y': 'ʸ', 'z': 'ᶻ',
+                '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹'
+            },
+            'blocks': {
+                'A': '🅰', 'B': '🅱', 'C': '🅲', 'D': '🅳', 'E': '🅴', 'F': '🅵', 'G': '🅶', 'H': '🅷', 'I': '🅸', 'J': '🅹', 'K': '🅺', 'L': '🅻', 'M': 'Ⓜ', 'N': '🅽', 'O': '🅾', 'P': '🅿', 'Q': '🆀', 'R': '🆁', 'S': '🆂', 'T': '🆃', 'U': '🆄', 'V': '🆅', 'W': '🆆', 'X': '🆇', 'Y': '🆈', 'Z': '🆉',
+                'a': '🅰', 'b': '🅱', 'c': '🅲', 'd': '🅳', 'e': '🅴', 'f': '🅵', 'g': '🅶', 'h': '🅷', 'i': '🅸', 'j': '🅹', 'k': '🅺', 'l': '🅻', 'm': 'Ⓜ', 'n': '🅽', 'o': '🅾', 'p': '🅿', 'q': '🆀', 'r': '🆁', 's': '🆂', 't': '🆃', 'u': '🆄', 'v': '🆅', 'w': '🆆', 'x': '🆇', 'y': '🆈', 'z': '🆉',
+                '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9' // Blocks style doesn't have unique numbers, using standard
+            }
+        };
+
+        function showMessage(text, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = text;
+            // Remove previous classes
+            messageBox.classList.remove('success', 'error');
+            // Add appropriate class
+            if (isError) {
+                messageBox.classList.add('error');
+            } else {
+                messageBox.classList.add('success');
+            }
+            messageBox.style.display = 'block';
+
+            // Restart animation by clearing and re-adding it
+            messageBox.style.animation = 'none';
+            messageBox.offsetHeight; // Trigger reflow
+            messageBox.style.animation = null;
+            messageBox.style.animation = 'fadeInOut 3s forwards';
+        }
+
+        function generateStylishFont() {
+            const inputText = document.getElementById('inputText').value;
+            const outputElement = document.getElementById('output');
+            const selectedStyle = document.getElementById('fontStyleSelector').value;
+            const currentFontMap = fontMaps[selectedStyle];
+
+            if (!currentFontMap) {
+                outputElement.textContent = "Error: Selected font style not found.";
+                showMessage("Error: Selected font style not found.", true);
+                return;
+            }
+
+            let stylishText = '';
+            for (let i = 0; i < inputText.length; i++) {
+                const char = inputText[i];
+                // Check if the character exists in the current font map, otherwise keep original
+                // Convert to uppercase for block characters as they only have uppercase mapping
+                const mappedChar = currentFontMap[char] || currentFontMap[char.toUpperCase()] || char;
+                stylishText += mappedChar;
+            }
+
+            outputElement.textContent = stylishText;
+            showMessage("Font generated successfully!");
+        }
+
+        function copyToClipboard() {
+            const outputElement = document.getElementById('output');
+            const textToCopy = outputElement.textContent;
+
+            if (!textToCopy) {
+                showMessage("Nothing to copy!", true);
+                return;
+            }
+
+            // Modern approach (navigator.clipboard.writeText)
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        showMessage('Text copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy using clipboard API: ', err);
+                        fallbackCopyToClipboard(textToCopy);
+                    });
+            } else {
+                // Fallback for older browsers or restricted environments (like iframes)
+                fallbackCopyToClipboard(textToCopy);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            tempTextArea.style.position = 'absolute'; // Hide it visually
+            tempTextArea.style.left = '-9999px';
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); /* For mobile devices */
+
+            try {
+                document.execCommand('copy');
+                showMessage('Text copied to clipboard!');
+            } catch (err) {
+                console.error('Fallback copy method failed: ', err);
+                showMessage('Failed to copy text. Please copy manually.', true);
+            } finally {
+                document.body.removeChild(tempTextArea);
+            }
+        }
+    </script>
+</body>
+</html>
